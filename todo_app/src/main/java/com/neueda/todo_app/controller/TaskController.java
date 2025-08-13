@@ -2,12 +2,14 @@ package com.neueda.todo_app.controller;
 
 import com.neueda.todo_app.repository.Task;
 import com.neueda.todo_app.service.TaskService;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/api/tasks")
+@CrossOrigin(origins="*")
 public class TaskController {
 
     TaskService taskService;
@@ -22,14 +24,14 @@ public class TaskController {
     }
 
 
+
     @GetMapping("/{id}")
     public Task getItem(@PathVariable Integer id) {
         return taskService.getTaskById(id);
     }
 
     @PostMapping
-    public boolean createItem(@RequestBody Task task) {
-        return taskService.createTask(task);
+    public void createItem(@RequestBody Task task) { taskService.createTask(task);
     }
 
     @PutMapping("/{id}")

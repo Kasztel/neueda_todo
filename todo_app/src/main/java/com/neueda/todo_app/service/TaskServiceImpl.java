@@ -29,13 +29,15 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void updateTask(Integer id, Task task) {
-        tasklist.remove(id);
+        tasklist.getTasklist().removeIf
+                (taskD -> taskD.getId().equals(id));
         tasklist.add(task);
     }
 
     @Override
     public void deleteTask(Integer id) {
-        tasklist.remove(id);
+         tasklist.getTasklist().removeIf
+                (task -> task.getId().equals(id));
     }
 
 

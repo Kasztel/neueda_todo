@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { margin: 5px; }
+        .task { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+<h1>Todo App</h1>
+
+<!-- Create Task -->
+<h2>Create Task</h2>
+<form id="createForm">
+    <input type="text" id="createTitle" placeholder="Title" required>
+    <input type="text" id="createDescription" placeholder="Description" required>
+    <button type="submit">Create</button>
+</form>
+
+<!-- Get All Tasks -->
+<h2>All Tasks</h2>
+<button onclick="getAllTasks()">Refresh</button>
+<div id="taskList"></div>
+
+<!-- Get Task by ID -->
+<h2>Get Task by ID</h2>
+<input type="number" id="getId" placeholder="Task ID">
+<button onclick="getTaskById()">Get</button>
+<div id="singleTask"></div>
+
+<!-- Update Task -->
+<h2>Update Task</h2>
+<form id="updateForm">
+    <input type="number" id="updateId" placeholder="Task ID" required>
+    <input type="text" id="updateTitle" placeholder="New Title" required>
+    <input type="text" id="updateDescription" placeholder="New Description" required>
+    <button type="submit">Update</button>
+</form>
+
+<!-- Delete Task -->
+<h2>Delete Task</h2>
+<input type="number" id="deleteId" placeholder="Task ID">
+<button onclick="deleteTask()">Delete</button>
+
+<script>
+    const baseUrl = '/api/tasks';
+
+    document.getElementById('createForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('createTitle').value;
+        const description = document.getElementById('createDescription').value;
+
+        await fetch(baseUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description })
+        });
+        getAllTasks();
+    });
+
+    async function getAllTasks() {
+        const res = await fetch(baseUrl);
+        const tasks = await res.json();
+        const list = document.getElementById('taskList');
+        list.innerHTML = '';
+        tasks.forEach(task => {
+            list.innerHTML += `<div class="task">ID: ${task.id}, Title: ${task.title}, Description: ${task.description}</div>`;
+        });
+    }
+
+    async function getTaskById() {
+        const id = document.getElementById('getId').value;
+        const res = await fetch(`${baseUrl}/${id}`);
+        const task = await res.json();
+        document.getElementById('singleTask').innerText = `ID: ${task.id}, Title: ${task.title}, Description: ${task.description}`;
+    }
+
+    document.getElementById('updateForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('updateId').value;
+        const title = document.getElementById('updateTitle').value;
+        const description = document.getElementById('updateDescription').value;
+
+        await fetch(`${baseUrl}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description })
+        });
+        getAllTasks();
+    });
+
+    async function deleteTask() {
+        const id = document.getElementById('deleteId').value;
+        await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
+        getAllTasks();
+    }
+
+    // Initial load
+    getAllTasks();
+</script>
+</body>
+</html>

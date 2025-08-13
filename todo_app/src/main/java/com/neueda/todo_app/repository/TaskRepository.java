@@ -8,9 +8,9 @@ import java.util.Date;
 @Repository
 public class TaskRepository {
     ArrayList<Task> tasklist = new ArrayList<>();
-
+    private int nextId = 1;
     public TaskRepository() {
-        Task task = new Task.Builder(0, "Buy groceries", "Milk, Eggs, Bread", Status.NOT_STARTED)
+        Task task = new Task.Builder(nextId++, "Buy groceries", "Milk, Eggs, Bread", Status.NOT_STARTED)
                 .category("Personal")
                 .reminder(new Date())
                 .deadline(new Date())
