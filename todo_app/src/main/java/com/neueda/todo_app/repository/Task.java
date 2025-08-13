@@ -24,6 +24,17 @@ public class Task {
         this.deadline = builder.deadline;
     }
 
+    public Task() {
+        this.id = null;
+        this.title = null;
+        this.description = null;
+        this.status = null;
+        this.category = "All";
+        this.reminder = null;
+        this.deadline = null;
+    }
+
+
     public static class Builder {
         private Integer id;
         private String title;

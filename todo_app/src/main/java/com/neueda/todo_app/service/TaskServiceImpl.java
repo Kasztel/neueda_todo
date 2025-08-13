@@ -23,14 +23,14 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public boolean createTask(Task item) {
-        return tasklist.add(item);
+    public boolean createTask(Task task) {
+        return tasklist.add(task);
     }
 
     @Override
-    public void updateTask(Integer id, Task item) {
+    public void updateTask(Integer id, Task task) {
         tasklist.remove(id);
-        tasklist.add(item);
+        tasklist.add(task);
     }
 
     @Override
