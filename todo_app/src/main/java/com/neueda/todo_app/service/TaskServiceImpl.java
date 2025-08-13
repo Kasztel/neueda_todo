@@ -19,7 +19,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTaskById(Integer id) {
-            return tasklist.get(id);
+            return tasklist.getTasklist().get(id);
     }
 
     @Override
@@ -29,9 +29,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void updateTask(Integer id, Task task) {
-        tasklist.getTasklist().removeIf
-                (taskD -> taskD.getId().equals(id));
-        tasklist.add(task);
+        tasklist.getTasklist().set(id,task);
     }
 
     @Override
