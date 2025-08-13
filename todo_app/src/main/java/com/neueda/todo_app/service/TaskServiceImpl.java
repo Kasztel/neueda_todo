@@ -1,5 +1,7 @@
 package com.neueda.todo_app.service;
 
+import com.neueda.todo_app.repository.Task;
+import com.neueda.todo_app.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -7,32 +9,33 @@ import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    ArrayList<String> list = new ArrayList<>(List.of("Item1", "Item2", "item3"));
+    TaskRepository tasklist = new TaskRepository();
+
 
     @Override
-    public List<String> getAllTasks() {
-        return list;
+    public List<Task> getAllTasks() {
+        return tasklist.getTasklist();
     }
 
     @Override
-    public String getTaskById(String id) {
-            return list.get(Integer.parseInt(id));
+    public Task getTaskById(Integer id) {
+            return tasklist.get(id);
     }
 
     @Override
-    public boolean createTask(String item) {
-        return list.add(item);
+    public boolean createTask(Task item) {
+        return tasklist.add(item);
     }
 
     @Override
-    public void updateTask(String id, String item) {
-        list.remove(Integer.parseInt(id));
-        list.add(item);
+    public void updateTask(Integer id, Task item) {
+        tasklist.remove(id);
+        tasklist.add(item);
     }
 
     @Override
-    public void deleteTask(String id) {
-        list.remove(Integer.parseInt(id));
+    public void deleteTask(Integer id) {
+        tasklist.remove(id);
     }
 
 

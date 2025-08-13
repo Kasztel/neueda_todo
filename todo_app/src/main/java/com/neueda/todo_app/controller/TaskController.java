@@ -1,5 +1,6 @@
 package com.neueda.todo_app.controller;
 
+import com.neueda.todo_app.repository.Task;
 import com.neueda.todo_app.service.TaskService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,28 +17,28 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<String> getTasks() {
+    public List<Task> getTasks() {
         return taskService.getAllTasks();
     }
 
 
     @GetMapping("/{id}")
-    public String getItem(@PathVariable String id) {
+    public Task getItem(@PathVariable Integer id) {
         return taskService.getTaskById(id);
     }
 
     @PostMapping
-    public boolean createItem(@RequestBody String item) {
-        return taskService.createTask(item);
+    public boolean createItem(@RequestBody Task task) {
+        return taskService.createTask(task);
     }
 
     @PutMapping("/{id}")
-    public void updateItem(@PathVariable String id, @RequestBody String item) {
-        taskService.updateTask(id, item);
+    public void updateItem(@PathVariable Integer id, @RequestBody Task task) {
+        taskService.updateTask(id, task);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable String id) {
+    public void deleteItem(@PathVariable Integer id) {
         taskService.deleteTask(id);
     }
 }
