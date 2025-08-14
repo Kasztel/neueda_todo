@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.util.Date;
 @Entity
 public class Task {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private final Long id;
@@ -68,12 +70,15 @@ public class Task {
             return this;
         }
 
+
         public Task build(Long id) {
             return new Task(id, this);
         }
     }
 
-
+    public Long getId() {
+        return id;
+    }
     public String getTitle() {
         return title;
     }

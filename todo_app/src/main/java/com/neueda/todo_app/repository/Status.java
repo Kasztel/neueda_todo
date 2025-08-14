@@ -20,7 +20,7 @@ public class Status {
         return status;
     }
 
-    private Status(Long id, String status) {
+    public Status(Long id, String status) {
         this.id = id;
         this.status = status;
     }
