@@ -1,10 +1,10 @@
-package com.neueda.todo_app;
+package com.neueda.item_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class TodoAppApplicationTests {
+class ItemApiApplicationTests {
 
 	@Test
 	void contextLoads() {
