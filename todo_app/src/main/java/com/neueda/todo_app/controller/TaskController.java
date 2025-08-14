@@ -1,46 +1,44 @@
 package com.neueda.todo_app.controller;
 
 import com.neueda.todo_app.repository.Task;
-import com.neueda.todo_app.service.TaskService;
-import org.springframework.stereotype.Controller;
+import com.neueda.todo_app.repository.TaskRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/tasks")
-@CrossOrigin(origins="*")
 public class TaskController {
 
-    TaskService taskService;
+    TaskRepository taskRepository;
 
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
+    public TaskController(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
     @GetMapping
     public List<Task> getTasks() {
-        return taskService.getAllTasks();
+        return taskRepository.findAll();
     }
-
 
 
     @GetMapping("/{id}")
-    public Task getItem(@PathVariable Integer id) {
-        return taskService.getTaskById(id);
+    public Task getItem(@PathVariable Long id) {
+        return taskRepository.findById(id).get();
     }
 
     @PostMapping
-    public void createItem(@RequestBody Task task) { taskService.createTask(task);
+    public Task createItem(@RequestBody Task task) {
+        return taskRepository.save(task);
     }
 
     @PutMapping("/{id}")
-    public void updateItem(@PathVariable Integer id, @RequestBody Task task) {
-        taskService.updateTask(id, task);
+    public void updateItem(@RequestBody Task task) {
+        taskRepository.save(task);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable Integer id) {
-        taskService.deleteTask(id);
+    public void deleteItem(@PathVariable Long id) {
+        taskRepository.deleteById(id);
     }
 }

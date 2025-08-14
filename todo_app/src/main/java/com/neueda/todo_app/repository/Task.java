@@ -1,21 +1,24 @@
 package com.neueda.todo_app.repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.*;
 
 import java.util.Date;
-
+@Entity
 public class Task {
-    private final Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private final Long id;
     private final String title;
     private final String description;
+    @ManyToOne
+    @JoinColumn(name="status_id")
     private final Status status;
     private final String category;
     private final Date reminder;
     private final Date deadline;
 
-    private Task(Builder builder) {
-        this.id = builder.id;
+    private Task(Long id, Builder builder) {
+        this.id = id;
         this.title = builder.title;
         this.description = builder.description;
         this.status = builder.status;
@@ -24,8 +27,8 @@ public class Task {
         this.deadline = builder.deadline;
     }
 
-    public Task() {
-        this.id = null;
+    public Task(Long id) {
+        this.id = id;
         this.title = null;
         this.description = null;
         this.status = null;
@@ -36,7 +39,6 @@ public class Task {
 
 
     public static class Builder {
-        private Integer id;
         private String title;
         private String description;
         private Status status;
@@ -45,8 +47,7 @@ public class Task {
         private Date deadline;
 
 
-        public Builder(Integer id, String title, String description, Status status) {
-            this.id = id;
+        public Builder( String title, String description, Status status) {
             this.title = title;
             this.description = description;
             this.status = status;
@@ -67,14 +68,11 @@ public class Task {
             return this;
         }
 
-        public Task build() {
-            return new Task(this);
+        public Task build(Long id) {
+            return new Task(id, this);
         }
     }
 
-    public Integer getId() {
-        return id;
-    }
 
     public String getTitle() {
         return title;
