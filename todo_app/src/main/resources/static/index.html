@@ -16,7 +16,10 @@
     <div class="panel">
         <h2>All Tasks</h2>
 
-        <div id="taskList"></div>
+        <table id="taskList" style="">
+        <th></th>
+        </table>
+
     </div>
 <script>
     const baseUrl = '/api/tasks';
@@ -47,10 +50,11 @@
         const list = document.getElementById('taskList');
         list.innerHTML = '';
         tasks.forEach(task => {
-            const div = document.createElement('div');
+            const div = document.createElement('tr');
+
             div.className = 'task';
-            div.innerText = `ID: ${task.id}, Title: ${task.title}, Description: ${task.description}`;
-            div.innerHTML += `<button id="${task.id}" onclick="deleteTask(${task.id})">X</button>`;
+            div.innerHTML = `<td >ID: ${task.id}, Title: ${task.title}, Description: ${task.description}</td>`;
+            div.innerHTML += `<td ><button id="${task.id}" onclick="deleteTask(${task.id})">X</button></td>`;
             list.appendChild(div);
         });
     }
