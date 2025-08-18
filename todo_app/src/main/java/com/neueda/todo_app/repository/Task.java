@@ -9,15 +9,22 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
-    private final String title;
-    private final String description;
+    private Long id;
+    private String title;
+    private String description;
+
+    public Task() {
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @ManyToOne
-    @JoinColumn(name="status_id")
-    private final Status status;
-    private final String category;
-    private final Date reminder;
-    private final Date deadline;
+    private Status status;
+    private String category;
+    private Date reminder;
+    private Date deadline;
 
     private Task(Long id, Builder builder) {
         this.id = id;

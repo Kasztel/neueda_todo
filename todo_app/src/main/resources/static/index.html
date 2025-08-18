@@ -154,11 +154,14 @@
         e.preventDefault();
         const title = document.getElementById('createTitle').value;
         const description = document.getElementById('createDescription').value;
-
+        const status = {
+        id:null,
+        name:'NOT COMPLETED'
+        };
         await fetch(baseUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, description })
+            body: JSON.stringify({ title, description,status})
         });
         getAllTasks();
     });
@@ -192,7 +195,7 @@
         await fetch(`${baseUrl}/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, description })
+            body: JSON.stringify({id, title, description })
         });
         getAllTasks();
     });

@@ -12,10 +12,18 @@ public class Status {
     //NOT_STARTED("Not started"), IN_PROGRESS("In progress"), COMPLETED("Completed");
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private final Long id;
+    private Long id;
 
-    private final String status;
 
+
+    private String status;
+
+    public Status() {
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public String getStatus() {
         return status;
     }

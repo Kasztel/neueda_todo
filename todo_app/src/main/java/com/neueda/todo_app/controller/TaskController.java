@@ -1,5 +1,7 @@
 package com.neueda.todo_app.controller;
 
+import com.neueda.todo_app.repository.Status;
+import com.neueda.todo_app.repository.StatusRepository;
 import com.neueda.todo_app.repository.Task;
 import com.neueda.todo_app.repository.TaskRepository;
 import org.springframework.web.bind.annotation.*;
@@ -11,9 +13,12 @@ import java.util.List;
 public class TaskController {
 
     TaskRepository taskRepository;
-
-    public TaskController(TaskRepository taskRepository) {
+    StatusRepository statusRepository;
+    public TaskController(TaskRepository taskRepository,StatusRepository statusRepository) {
         this.taskRepository = taskRepository;
+        this.statusRepository = statusRepository;
+        Status status = new Status(null, "NOT_COMPLETED");
+        this.statusRepository.save(status);
     }
 
     @GetMapping
@@ -29,11 +34,15 @@ public class TaskController {
 
     @PostMapping
     public Task createItem(@RequestBody Task task) {
+
+        statusRepository.save(task.getStatus());
         return taskRepository.save(task);
     }
 
     @PutMapping("/{id}")
-    public void updateItem(@RequestBody Task task) {
+    public void updateItem(@RequestBody Task task,@PathVariable Long id) {
+
+
         taskRepository.save(task);
     }
 
