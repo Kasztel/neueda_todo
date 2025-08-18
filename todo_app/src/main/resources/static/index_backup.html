@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Todo App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            color: #ff6f61;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px #fff;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .panel {
+            flex: 1 1 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+        }
+
+        h2 {
+            color: #ff6f61;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ff6f61;
+            padding-bottom: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            padding: 10px;
+            border: 2px solid #ff6f61;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #ff3b3f;
+            box-shadow: 0 0 5px rgba(255, 59, 63, 0.5);
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #ff3b3f;
+            transform: scale(1.05);
+        }
+
+        .task {
+            background-color: #fff8f6;
+            border-left: 5px solid #ff6f61;
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #singleTask {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 5px solid #ff6f61;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<h1>Todo App</h1>
+<div class="container">
+    <div class="panel">
+        <h2>Create Task</h2>
+        <form id="createForm">
+            <input type="text" id="createTitle" placeholder="Title" required>
+            <input type="text" id="createDescription" placeholder="Description" required>
+            <button type="submit">Create</button>
+        </form>
+
+        <h2>Update Task</h2>
+        <form id="updateForm">
+            <input type="number" id="updateId" placeholder="Task ID" required>
+            <input type="text" id="updateTitle" placeholder="New Title" required>
+            <input type="text" id="updateDescription" placeholder="New Description" required>
+            <button type="submit">Update</button>
+        </form>
+
+        <h2>Delete Task</h2>
+        <input type="number" id="deleteId" placeholder="Task ID">
+        <button onclick="deleteTask()">Delete</button>
+
+        <h2>Get Task by ID</h2>
+        <input type="number" id="getId" placeholder="Task ID">
+        <button onclick="getTaskById()">Get</button>
+        <div id="singleTask"></div>
+    </div>
+
+    <div class="panel">
+        <h2>All Tasks</h2>
+        <button onclick="getAllTasks()">Refresh</button>
+        <div id="taskList"></div>
+    </div>
+</div>
+
+<script>
+    const baseUrl = '/api/tasks';
+
+    document.getElementById('createForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const title = document.getElementById('createTitle').value;
+        const description = document.getElementById('createDescription').value;
+        const status = {
+        id:null,
+        name:'NOT COMPLETED'
+        };
+        await fetch(baseUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, description,status})
+        });
+        getAllTasks();
+    });
+
+    async function getAllTasks() {
+        const res = await fetch(baseUrl);
+        const tasks = await res.json();
+        const list = document.getElementById('taskList');
+        list.innerHTML = '';
+        tasks.forEach(task => {
+            const div = document.createElement('div');
+            div.className = 'task';
+            div.innerText = `ID: ${task.id}, Title: ${task.title}, Description: ${task.description}`;
+            list.appendChild(div);
+        });
+    }
+
+    async function getTaskById() {
+        const id = document.getElementById('getId').value;
+        const res = await fetch(`${baseUrl}/${id}`);
+        const task = await res.json();
+        document.getElementById('singleTask').innerText = `ID: ${task.id}, Title: ${task.title}, Description: ${task.description}`;
+    }
+
+    document.getElementById('updateForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('updateId').value;
+        const title = document.getElementById('updateTitle').value;
+        const description = document.getElementById('updateDescription').value;
+
+        await fetch(`${baseUrl}/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({id, title, description })
+        });
+        getAllTasks();
+    });
+
+    async function deleteTask() {
+        const id = document.getElementById('deleteId').value;
+        await fetch(`${baseUrl}/${id}`, { method: 'DELETE' });
+        getAllTasks();
+    }
+
+    // Initial load
+    getAllTasks();
+</script>
+</body>
+</html>
